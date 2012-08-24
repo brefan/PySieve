@@ -12,6 +12,7 @@ void get_random_seeds(uint32 *seed1, uint32 *seed2){
 	if (rand_device != NULL){
 		fread(&tmp1, sizeof(uint32), (size_t)1, rand_device);
 		fread(&tmp2, sizeof(uint32), (size_t)1, rand_device);
+		fclose(rand_device);
 	}
 
 	(*seed1) = tmp1 * ((uint32)40499 * 65543);
@@ -33,7 +34,8 @@ void calculate_factors(char *buf,
 											 uint32 cache_size2,
 											 uint32 num_threads,
 											 uint32 mem_mb,
-											 uint32 which_gpu){
+											 uint32 which_gpu,
+											 double target_density){
 	char *int_start, *last;
 	msieve_obj *obj;
 	msieve_factor *factor;
@@ -58,7 +60,8 @@ void calculate_factors(char *buf,
 																				*seed1, *seed2, max_relations,
 																				nfs_lower, nfs_upper, cpu,
 																				cache_size1, cache_size2,
-																				num_threads, mem_mb, which_gpu);
+																				num_threads, mem_mb, which_gpu,
+																				target_density);
 
 	if (g_curr_factorization == NULL){
 		printf("factoring failed\n");
@@ -102,6 +105,7 @@ static PyObject *_pysieve_msieve(PyObject *self, PyObject *args){
 	uint32 num_threads = 0;
 	uint32 mem_mb = 0;
 	uint32 which_gpu = 0;
+	double target_density = 0;
 
 	get_cache_sizes(&cache_size1, &cache_size2);
 	cpu = get_cpu_type();
@@ -128,7 +132,8 @@ static PyObject *_pysieve_msieve(PyObject *self, PyObject *args){
 										cpu,
 										cache_size1,
 										cache_size2,
-										num_threads, mem_mb, which_gpu);
+										num_threads, mem_mb, which_gpu,
+										target_density);
 
 	return result;
 			

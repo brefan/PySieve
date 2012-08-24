@@ -1,6 +1,7 @@
 import _pysieve
 import os.path
 import os
+import itertools
 
 def factor(n):
     """ Returns a list of the prime factors of n """
@@ -20,6 +21,10 @@ def factor(n):
 def dfactor(n):
     """ Returns a list of distinct prime factors of n """
     return sorted(list(set(factor(n))))
+
+def mfactor(n):
+    """ Returns a list of tuples (prime factor, count) """
+    return [(k, len(list(g))) for k, g in itertools.groupby(factor(n))]
 
 def facExponents(n):
     """ Return a list of tuples containing the prime factors of n and their exponents """

@@ -1,11 +1,16 @@
 from distutils.core import setup, Extension
 import os.path
-
+import distutils
 
 # Look for the msieve lib and header 
 # Currently only for Unix
 libpaths = ['/usr/local/lib', '/usr/lib','/opt/local/lib']
 includepaths = ['/usr/local/include', '/usr/include', '/opt/local/include']
+
+# add virtualenv pathes
+base = distutils.sysconfig.project_base[:-4]       # strip /bin
+libpaths.append(os.path.join(base, 'lib'))
+includepaths.append(os.path.join(base, 'include'))
 
 libpath = []
 for p in libpaths:
@@ -38,12 +43,12 @@ extension1 = Extension('_pysieve',
                     sources = ['pysieve/pysieve.c'])
 
 setup (name = 'PySieve',
-       version = '0.5.1',
+       version = '0.5.1fork',
        packages=['pysieve'],
        ext_modules = [extension1],
        author = 'Severin Bannert',
        author_email = 'severin.bannert@gmail.com',
-       url = 'http://github.com/dansefatale/PySieve',
+       url = 'http://github.com/brefan/PySieve',
        description = 'Fast prime factorization using the msieve library',
        long_description = open('README.txt').read(),
        classifiers = ['Topic :: Scientific/Engineering :: Mathematics', 
